@@ -40,10 +40,6 @@ if (!defined('ABSPATH'))
     exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
-if (did_action('elementor/loaded')) {
-    require_once('plugin.php');
-}
-
 
 /**
  * The main plugins class
@@ -64,7 +60,7 @@ final class Bdthemes_Refund_System {
 
         register_activation_hook(__FILE__, [$this, 'activate']);
 
-        add_action('plugins_loaded', [$this, 'init_plugin']);
+        add_action('plugins_loaded', [$this, 'init_plugin'], 9);
     }
 
 
@@ -89,8 +85,9 @@ final class Bdthemes_Refund_System {
      * @return void
      */
     public function define_constants() {
-        define('BDT_REFUND_SYSTEM_VERSION', self::version);
         define('BDT_REFUND_SYSTEM_FILE', __FILE__);
+        define('BDT_REFUND_SYSTEM__PATH', plugin_dir_path(BDT_REFUND_SYSTEM_FILE));
+        define('BDT_REFUND_SYSTEM_VERSION', self::version);
         define('BDT_REFUND_SYSTEM_PATH', __DIR__);
         define('BDT_REFUND_SYSTEM_URL', plugins_url('', BDT_REFUND_SYSTEM_FILE));
         define('BDT_REFUND_SYSTEM_ASSETS', BDT_REFUND_SYSTEM_URL . '/assets');
@@ -106,7 +103,11 @@ final class Bdthemes_Refund_System {
             new Bdthemes\RefundSystem\Admin();
         } else {
             // new for frontEnd
-            new Bdthemes\RefundSystem\Frontend();
+            // new Bdthemes\RefundSystem\Frontend();
+        }
+
+        if (did_action('elementor/loaded')) {
+            require_once BDT_REFUND_SYSTEM__PATH . 'plugin.php';
         }
     }
 
