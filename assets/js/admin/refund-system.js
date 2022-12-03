@@ -33,24 +33,37 @@
         loader: function () {
             Swal.showLoading();
         },
-        get_info: function ($id, $license) {
+        getInfo: function (data) {
             var Obj = this;
             jQuery.ajax({
                 type: "POST",
                 url: ajaxurl,
-                data: {
-                    'action': 'bdt_rs_get_info',
-                    'license_code': $license,
-                },
+                data: data,
                 success: function (data) {
                     let response = JSON.parse(data);
 
-                    if (response == 'success') {
-                        Obj.alertMsg('Great Job!', 'Domain Removed Successfully.', 'success');
-                        $('#' + $id).closest('li').slideUp();
+                    if (response == 'field-blank') {
+                        Obj.alertMsg('Ops!', 'Field should not be empty!', 'warning')
+                        return;
+                    }
+                    if (response == 'error') {
+                        Obj.alertMsg('Ops!', 'Something Wrong or License is not correct!', 'warning')
+                        return;
+                    }
+                    if (response == 'nonce_expired') {
+                        Obj.alertMsg('Ops!', 'Session Expired, please reload your webpage.', 'warning')
+                        return;
                     }
 
+                    Swal.close();
+                    bdtUIkit.modal($('#bdts-modal')).show();
+                    $('#bdts-modal-body').html(response);
+
+                },
+                error: function (errorThrown) {
+                    alert(errorThrown);
                 }
+
             });
         },
         // to save settings api key
@@ -75,15 +88,6 @@
         },
         init: function () {
             var Obj = this;
-            /**
-             * start check license / clients info
-             */
-            $('#check-license-form').on('submit', function (event) {
-                event.preventDefault();
-                let data = $(this).serializeArray();
-                App.loader();
-                Obj.checkInfo(data);
-            });
 
             /**
              * Save Settings
@@ -102,10 +106,12 @@
 
             $(document).on('click', '.bdt-license-action', function (event) {
                 event.preventDefault();
-                $license = $(this).data('license');
-                $id = $(this).data('id');
+                let data = {
+                    'action': 'bdt_rs_get_info',
+                    'license': $(this).data('license'),
+                };
                 App.loader();
-                Obj.get_info($id, $license);
+                Obj.getInfo(data);
             });
         }
     }

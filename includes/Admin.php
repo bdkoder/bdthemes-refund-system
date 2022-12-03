@@ -15,7 +15,7 @@ class Admin {
 
     public function dispatch_actions($refunds) {
 
-        add_action('wp_ajax_bdt_save_settings', 'bdt_rs_save_settings');
+        add_action('wp_ajax_bdt_rs_get_info', 'bdt_rs_get_info');
 
         if (isset($_GET['page']) && ($_GET['page'] == 'bdthemes-refund-system')) {
             add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts']);
