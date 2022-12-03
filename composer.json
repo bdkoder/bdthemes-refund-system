@@ -1,0 +1,18 @@
+{
+    "name": "bdt011/bdthemes-refund-system",
+    "description": "A plugin for Refund System",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "authors": [{
+        "name": "Shahidul Islam",
+        "email": "bdkoder@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Bdthemes\\RefundSystem\\": "includes/"
+        },
+        "files": ["includes/functions.php"]
+    }
+}
