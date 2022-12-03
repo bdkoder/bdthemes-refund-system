@@ -75,9 +75,10 @@ class Refund_List extends \WP_List_Table {
 
     public function column_product_license($item) {
         return sprintf(
-            '<strong>License - </strong><i>%1$s</i> <br> <strong>Email - </strong><i>%2$s</i>',
+            '<strong>License - </strong><i>%1$s</i> <br> <strong>Email - </strong><i>%2$s</i> <br> <strong>Comments - %3$s</strong>',
             $item->product_license,
-            $item->email
+            $item->email,
+            $item->comments
         );
     }
 
@@ -115,9 +116,9 @@ class Refund_List extends \WP_List_Table {
             $args['order'] = $_REQUEST['order'];
         }
 
-        $this->items = wd_get_refunds($args);
+        $this->items = bdt_rs_get_refunds($args);
         $this->set_pagination_args([
-            'total_items' => wd_refunds_count(),
+            'total_items' => bdt_rs_get_refunds_count(),
             'per_page'   => $per_page
         ]);
     }

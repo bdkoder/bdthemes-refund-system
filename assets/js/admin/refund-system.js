@@ -66,6 +66,25 @@
 
             });
         },
+        // to Action Trigger
+        actionTrigger: function (data) {
+            var Obj = this;
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+            }).done(function (data) {
+                let response = JSON.parse(data);
+
+                if (response == 'success') {
+                    Obj.alertMsg('Great Job!', 'Operation Successfully.', 'success');
+                } else {
+                    Obj.alertMsg('Sorry!', 'Operation Failed! Or Data maybe not modified.', 'error');
+                }
+            }).fail(function () {
+                alert("The Ajax call itself failed.");
+            });
+        },
         // to save settings api key
         saveSettings: function (data) {
             var Obj = this;
@@ -109,9 +128,30 @@
                 let data = {
                     'action': 'bdt_rs_get_info',
                     'license': $(this).data('license'),
+                    'id': $(this).data('id'),
                 };
                 App.loader();
                 Obj.getInfo(data);
+            });
+
+            /**
+             * License Action Trigger
+             */
+
+            $(document).on('click', '#bdt-rs-action-submit', function (event) {
+                event.preventDefault();
+                $('#bdt_rs_action_nonce').val()
+
+                let data = {
+                    'action': 'bdt_rs_action_trigger',
+                    'actionValue': $('#bdt-rs-action-select').val(),
+                    'id': $('#bdt-rs-action-select').data('id'),
+                    '_wpnonce': $('#bdt_rs_action_nonce').val(),
+                    'comments': $('#bdt-rs-comments').val(),
+                };
+
+                App.loader();
+                Obj.actionTrigger(data);
             });
         }
     }

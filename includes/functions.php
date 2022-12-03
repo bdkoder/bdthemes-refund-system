@@ -63,62 +63,6 @@ function wd_event_insert_event($args = []) {
     return $wpdb->insert_id;
 }
 
-/**
- * Fetch Events
- *
- * @param $args
- *
- * @return array
- */
-
-function wd_get_refunds($args = []) {
-    global $wpdb;
-
-    $defaults = [
-        'number' => 20,
-        'offset' => 0,
-        'orderby' => 'id',
-        'order' => 'ASC',
-    ];
-
-    $args = wp_parse_args($args, $defaults);
-
-    $items = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}bdthemes_refunds
-            ORDER BY {$args['orderby']} {$args['order']}
-            LIMIT %d, %d",
-            $args['offset'],
-            $args['number']
-        )
-    );
-
-    return $items;
-}
-
-/**
- * Get the count of total events
- *
- * @return int
- */
-function wd_refunds_count() {
-    global $wpdb;
-    return (int) $wpdb->get_var("SELECT count(id) FROM {$wpdb->prefix}bdthemes_refunds");
-}
-
-/**
- * Fetch a single contact form the DB
- *
- * @param int $id
- *
- * @return object
- */
-function wd_get_event($id) {
-    global $wpdb;
-    return $wpdb->get_row(
-        $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE id = %d", $id)
-    );
-}
 
 /**
  * Delete and Event
@@ -162,6 +106,65 @@ class BDT_REFUND_SYSTEM_APP {
         $msg = 'error';
         echo wp_json_encode($msg);
         wp_die();
+    }
+
+
+    /**
+     * Fetch Refunds
+     *
+     * @param $args
+     *
+     * @return array
+     */
+
+    function get_refunds($args = []) {
+        global $wpdb;
+
+        $defaults = [
+            'number' => 20,
+            'offset' => 0,
+            'orderby' => 'id',
+            'order' => 'ASC',
+        ];
+
+        $args = wp_parse_args($args, $defaults);
+
+        $items = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}bdthemes_refunds
+            ORDER BY {$args['orderby']} {$args['order']}
+            LIMIT %d, %d",
+                $args['offset'],
+                $args['number']
+            )
+        );
+
+        return $items;
+    }
+
+    /**
+     * Get the count of total Refunds
+     *
+     * @return int
+     */
+    function get_refunds_count() {
+        global $wpdb;
+        return (int) $wpdb->get_var("SELECT count(id) FROM {$wpdb->prefix}bdthemes_refunds");
+    }
+
+
+    /**
+     * Fetch a single row from the DB
+     *
+     * @param int $id
+     *
+     * @return object
+     */
+    function get_refund($id) {
+        global $wpdb;
+        return $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE id = %d", $id)
+        );
     }
 
     /**
@@ -225,7 +228,7 @@ class BDT_REFUND_SYSTEM_APP {
         //     // $this->throw_error();
         // }
 
-        $result = $this->license_details(sanitize_text_field($_POST["license"]));
+        $result = $this->license_details(sanitize_text_field($_POST["license"]), intval($_POST['id']));
 
         echo wp_json_encode($result);
         wp_die();
@@ -236,7 +239,7 @@ class BDT_REFUND_SYSTEM_APP {
      *
      * @return void
      */
-    public function license_details($license) {
+    public function license_details($license, $id) {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -316,6 +319,7 @@ class BDT_REFUND_SYSTEM_APP {
         }
 
         $email = $this->get_client_email($response['client_id']);
+        $row_data = $this->get_refund($id);
 
         $result = '';
 
@@ -374,6 +378,24 @@ class BDT_REFUND_SYSTEM_APP {
                         </tr>
                     </tbody>
                 </table>';
+
+        $result .= '<h3 class="bdt-margin bdt-padding-small bdt-text-center">Action</h3>';
+        $result .= '<div class="bdt-margin">
+                <label class="bdt-form-label" for="bdt-rs-action-select">License Action</label>
+                <div class="bdt-form-controls bdt-margin-top-small">
+                    <select class="bdt-select bdt-padding-remove" id="bdt-rs-action-select" data-id="' . $row_data->id . '">
+                        <option>Select Action</option>
+                        <option value="waiting">Waiting</option>
+                        <option value="declined">Declined</option>
+                        <option value="approved">Approved</option>
+                        <option value="' . $row_data->status . '" selected>' . ucwords($row_data->status) . '</option>
+                    </select>
+                </div>
+            </div>';
+        $result .= '<div class="bdt-margin">
+            <textarea class="bdt-textarea" rows="5" placeholder="Comments/Note" id="bdt-rs-comments">' . $row_data->comments . '</textarea>
+        </div>
+        <button class="bdt-button bdt-button-primary" type="button" id="bdt-rs-action-submit">Update</button>';
 
         return $result;
     }
@@ -543,14 +565,101 @@ class BDT_REFUND_SYSTEM_APP {
 
         return $response['data'];
     }
+
+    /**
+     * Action Trigger
+     *
+     * @return void
+     */
+
+    public function action_trigger($data) {
+
+        //todo
+
+        //    if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bdt_rs_action_nonce')) {
+        //         echo wp_json_encode('nonce_expired');
+        //         wp_die();
+        //     }
+
+        $id = intval($data['id']);
+        global $wpdb;
+
+        $defaults = [
+            'status'    => 'waiting',
+            'comments'  => NULL,
+            'status_by' => get_current_user_id()
+        ];
+        $args = [
+            'status'    => $data['actionValue'],
+            'comments'  => !empty($data['comments']) ? $data['comments'] : NULL,
+            'status_by' => get_current_user_id()
+        ];
+        $data = wp_parse_args($args, $defaults);
+
+        $updated = $wpdb->update(
+            $wpdb->prefix . 'bdthemes_refunds',
+            $data,
+            ['id' => $id],
+            [
+                '%s',
+                '%s',
+                '%d',
+            ],
+            ['%d']
+        );
+
+        if ($updated) {
+            $response = 'success';
+        } else {
+            $response = 'failed';
+        }
+
+        echo wp_json_encode($response);
+        wp_die();
+    }
 }
 
+/**
+ * Save Settings
+ *
+ */
 function bdt_rs_save_settings() {
     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
     $bdt_rs_app->save_settings($_POST);
 }
 
+/**
+ * Get Refunds
+ *
+ */
+function bdt_rs_get_refunds() {
+    $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
+    return $bdt_rs_app->get_refunds($_POST);
+}
+
+/**
+ * Get Counts Refund
+ *
+ */
+function bdt_rs_get_refunds_count() {
+    $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
+    return $bdt_rs_app->get_refunds_count($_POST);
+}
+
+/**
+ * Get License Info
+ *
+ */
 function bdt_rs_get_info() {
     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
     $bdt_rs_app->detect_info($_POST);
+}
+
+/**
+ * Update Action Trigger
+ *
+ */
+function bdt_rs_action_trigger() {
+    $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
+    $bdt_rs_app->action_trigger($_POST);
 }
