@@ -3,15 +3,11 @@
 namespace Bdthemes\RefundSystem\Widgets;
 
 use Elementor\Widget_Base;
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Typography;
-use Elementor\Group_Control_Background;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-use Elementor\Icons_Manager;
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
-
+if (!defined('ABSPATH')) {
+	exit;
+}
+// Exit if accessed directly
 
 class Refund_Form extends Widget_Base {
 
@@ -31,6 +27,10 @@ class Refund_Form extends Widget_Base {
 		return ['bdt-refund-system'];
 	}
 
+	public function get_style_depends() {
+		return ['bdt-rs-form'];
+	}
+
 	public function get_script_depends() {
 		return ['sweetalert2', 'bdt-rs-form'];
 	}
@@ -43,14 +43,53 @@ class Refund_Form extends Widget_Base {
 			]
 		);
 
-
-
 		$this->end_controls_section();
 	}
 
 	protected function render() {
+
+		$id = 'bdt-rs-form-' . $this->get_id();
+
+		$this->add_render_attribute('form', [
+			'class'         => 'bdt-rs-form',
+			'id'            => $id,
+			'data-settings' => wp_json_encode([
+				'id' => '#' . $id
+			])
+		]);
+
 ?>
-		Form
+		<div <?php $this->print_render_attribute_string('form'); ?>>
+			<form class="bdt-grid-small" bdt-grid>
+				<div class="bdt-margin bdt-width-1-1">
+					<label class="bdt-form-label" for="bdt-rs-license-key">Your License Key</label>
+					<div class="bdt-form-controls">
+						<input class="bdt-input" id="bdt-rs-license-key" type="text" placeholder="Your License Key">
+					</div>
+				</div>
+				<div class="bdt-margin bdt-width-1-2@s">
+					<label class="bdt-form-label" for="bdt-rs-name">Your Name</label>
+					<div class="bdt-form-controls">
+						<input class="bdt-input" id="bdt-rs-name" type="text" placeholder="Your Name">
+					</div>
+				</div>
+				<div class="bdt-margin bdt-width-1-2@s">
+					<label class="bdt-form-label" for="bdt-rs-email">Your Email</label>
+					<div class="bdt-form-controls">
+						<input class="bdt-input" id="bdt-rs-email" type="text" placeholder="Your Email">
+					</div>
+				</div>
+				<div class="bdt-margin bdt-width-1-2@s">
+					<input class="bdt-input" type="text" placeholder="50" aria-label="50">
+				</div>
+				<div class="bdt-margin bdt-width-1-2@s">
+					<input class="bdt-input" type="text" placeholder="50" aria-label="50">
+				</div>
+				<div class="bdt-margin bdt-width-1-1">
+					<button class="bdt-button bdt-button-primary bdt-width-1-1">Submit</button>
+				</div>
+			</form>
+		</div>
 <?php
 	}
 }

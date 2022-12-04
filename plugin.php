@@ -98,7 +98,7 @@ class Plugin {
 
 	public function widget_styles() {
 
-		wp_register_style('bdt-rs-form', plugins_url('assets/css/bdt-rs-form.css', __FILE__));
+		wp_register_style('bdt-rs-form', BDT_REFUND_SYSTEM_ASSETS . 'css/bdt-rs-form.css');
 	}
 
 	/**

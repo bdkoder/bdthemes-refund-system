@@ -90,7 +90,7 @@ final class Bdthemes_Refund_System {
         define('BDT_REFUND_SYSTEM_VERSION', self::version);
         define('BDT_REFUND_SYSTEM_PATH', __DIR__);
         define('BDT_REFUND_SYSTEM_URL', plugins_url('', BDT_REFUND_SYSTEM_FILE));
-        define('BDT_REFUND_SYSTEM_ASSETS', BDT_REFUND_SYSTEM_URL . '/assets');
+        define('BDT_REFUND_SYSTEM_ASSETS', BDT_REFUND_SYSTEM_URL . '/assets/');
     }
 
     /**
