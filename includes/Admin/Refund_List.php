@@ -63,7 +63,7 @@ class Refund_List extends \WP_List_Table {
             __('Details & Action', 'bdthemes-refund-system')
         );
 
-        $actions['delete'] = sprintf('<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure?\');" title="%s">%s</a>', wp_nonce_url(admin_url('admin-post.php?action=wd-delete-event&id=' . $item->id), 'wd-delete-event'), $item->id, __('Delete', 'bdthemes-refund-system'), __('Delete', 'bdthemes-refund-system'));
+        // $actions['delete'] = sprintf('<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure?\');" title="%s">%s</a>', wp_nonce_url(admin_url('admin-post.php?action=wd-delete-event&id=' . $item->id), 'wd-delete-event'), $item->id, __('Delete', 'bdthemes-refund-system'), __('Delete', 'bdthemes-refund-system'));
 
         return sprintf(
             '<a href="%1$s"><strong>%2$s</strong></a> %3$s',
@@ -75,10 +75,11 @@ class Refund_List extends \WP_List_Table {
 
     public function column_product_license($item) {
         return sprintf(
-            '<strong>License - </strong><i>%1$s</i> <br> <strong>Email - </strong><i>%2$s</i> <br> <strong>Comments - %3$s</strong>',
+            '<strong>Product - </strong><i>%1$s</i> <br> <strong>License - </strong><i>%2$s</i> <br> <strong>Email - </strong><i>%3$s</i> <br> <strong>Message - %4$s</strong>',
+            $item->product_name,
             $item->product_license,
             $item->email,
-            $item->comments
+            $item->message
         );
     }
 

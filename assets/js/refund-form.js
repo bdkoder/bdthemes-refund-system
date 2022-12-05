@@ -26,7 +26,7 @@
 					let response = JSON.parse(data);
 
 					if (response.status == 'success') {
-						Obj.alertMsg('Request Done!', 'Submitted Successfully.', 'success');
+						Obj.alertMsg('Request Accepted!', 'Our refund team will respond to you very soon. Thank you.', 'success');
 					} else if (response.status == 'error') {
 						Obj.alertMsg('Sorry!', response.msg, 'error');
 					} else {

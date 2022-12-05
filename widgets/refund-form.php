@@ -3,6 +3,10 @@
 namespace Bdthemes\RefundSystem\Widgets;
 
 use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Border;
+use Elementor\Group_Control_Background;
 
 if (!defined('ABSPATH')) {
 	exit;
@@ -44,6 +48,162 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style_common',
+			[
+				'label' => __('Common', 'bdt-refund-system'),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'container_width',
+			[
+				'label' => __('Max Width', 'bdt-refund-system'),
+				'type'  => Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 500,
+						'max' => 1200,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .bdt-rs-form' => 'max-width: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style_label',
+			[
+				'label' => __('Label', 'bdt-refund-system'),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'label_color',
+			[
+				'label'     => __('Color', 'bdt-refund-system'),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .bdt-form-label' => 'color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'     => 'label_typography',
+				'selector' => '{{WRAPPER}} .bdt-form-label',
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style_button',
+			[
+				'label' => __('Button', 'bdt-refund-system'),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'button_color',
+			[
+				'label'     => __('Color', 'bdt-refund-system'),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .bdt-button' => 'color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_group_control(
+            Group_Control_Background::get_type(),
+            [
+                'name'      => 'button_background',
+                'selector'  => '{{WRAPPER}} .bdt-button',
+            ]
+        );
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'     => 'button_typography',
+				'selector' => '{{WRAPPER}} .bdt-button',
+			]
+		);
+
+		$this->add_responsive_control(
+            'button_padding',
+            [
+                'label'      => __('Padding', 'bdthemes-element-pack'),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .bdt-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+		$this->add_group_control(
+            Group_Control_Border::get_type(),
+            [
+                'name'        => 'button_border',
+                'placeholder' => '1px',
+                'default'     => '1px',
+                'selector'    => '{{WRAPPER}} .bdt-button',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'button_radius',
+            [
+                'label'      => __('Border Radius', 'bdthemes-element-pack'),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .bdt-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
+                ],
+            ]
+        );
+
+
+		$this->add_control(
+			'button_heading',
+			[
+				'label'     => esc_html__( 'Additional Options', 'textdomain' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'button_color_hover',
+			[
+				'label'     => __('Color', 'bdt-refund-system'),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .bdt-button:hover' => 'color: {{VALUE}};',
+				],
+			]
+		);
+
+		$this->add_group_control(
+            Group_Control_Background::get_type(),
+            [
+                'name'      => 'button_background_hover',
+                'selector'  => '{{WRAPPER}} .bdt-button:hover',
+            ]
+        );
+
+		$this->end_controls_section();
 	}
 
 	protected function render() {
@@ -64,19 +224,19 @@ class Refund_Form extends Widget_Base {
 				<div class="bdt-margin bdt-width-1-1">
 					<label class="bdt-form-label" for="bdt-rs-license-key">Your License Key</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-license-key" name="product_license" type="text" placeholder="Your License Key" required value="72A32394-65146F0C-5B665ADA-602E1308">
+						<input class="bdt-input" id="bdt-rs-license-key" name="product_license" type="text" placeholder="Your License Key" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
 					<label class="bdt-form-label" for="bdt-rs-name">Your Name</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-name" name="name" type="text" placeholder="Your Name" required value="XXX">
+						<input class="bdt-input" id="bdt-rs-name" name="name" type="text" placeholder="Your Name" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
 					<label class="bdt-form-label" for="bdt-rs-email">Your Email</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-email" name="email" type="email" placeholder="Your Email" required value="bdkoder@gmail.com">
+						<input class="bdt-input" id="bdt-rs-email" name="email" type="email" placeholder="Your Email" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-1">
