@@ -114,6 +114,15 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->add_control(
+            'button_full_width',
+            [
+                'label'   => __('Button Full Width', 'bdthemes-element-pack'),
+                'type'    => Controls_Manager::SWITCHER,
+                'default' => 'yes',
+            ]
+        );
+
+		$this->add_control(
 			'button_color',
 			[
 				'label'     => __('Color', 'bdt-refund-system'),
@@ -178,7 +187,7 @@ class Refund_Form extends Widget_Base {
 		$this->add_control(
 			'button_heading',
 			[
-				'label'     => esc_html__( 'Additional Options', 'textdomain' ),
+				'label'     => esc_html__( 'Hover Style', 'textdomain' ),
 				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -207,6 +216,8 @@ class Refund_Form extends Widget_Base {
 	}
 
 	protected function render() {
+
+		$settings = $this->get_settings_for_display();
 
 		$id = 'bdt-rs-form-' . $this->get_id();
 
@@ -246,8 +257,8 @@ class Refund_Form extends Widget_Base {
 				<input type="hidden" name="action" value="bdt_rs_form">
 				<?php wp_nonce_field('bdt-rs-form-submit'); ?>
 
-				<div class="bdt-margin bdt-width-1-1">
-					<button class="bdt-button bdt-button-primary bdt-width-1-1" type="submit">Submit</button>
+				<div class="bdt-margin <?php echo ('yes' == $settings['button_full_width']) ? ' bdt-width-1-1' : ''; ?>">
+					<button class="bdt-button bdt-button-primary <?php echo ('yes' == $settings['button_full_width']) ? ' bdt-width-1-1' : ''; ?>" type="submit">Submit</button>
 				</div>
 			</form>
 		</div>
