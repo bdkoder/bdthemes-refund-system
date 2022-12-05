@@ -76,7 +76,7 @@ class Refund_Form extends Widget_Base {
 				<div class="bdt-margin bdt-width-1-2@s">
 					<label class="bdt-form-label" for="bdt-rs-email">Your Email</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-email" name="email" type="text" placeholder="Your Email" required value="XXX">
+						<input class="bdt-input" id="bdt-rs-email" name="email" type="email" placeholder="Your Email" required value="bdkoder@gmail.com">
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-1">

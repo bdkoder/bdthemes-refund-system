@@ -25,8 +25,10 @@
 				}).done(function (data) {
 					let response = JSON.parse(data);
 
-					if (response == 'success') {
+					if (response.status == 'success') {
 						Obj.alertMsg('Request Done!', 'Submitted Successfully.', 'success');
+					} else if (response.status == 'error') {
+						Obj.alertMsg('Sorry!', response.msg, 'error');
 					} else {
 						Obj.alertMsg('Sorry!', data, 'error');
 					}

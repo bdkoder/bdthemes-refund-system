@@ -1,23 +1,5 @@
 <?php
 
-/**
- * Delete and Event
- *
- * @param int $id
- *
- * @return int|boolean
- */
-
-function __wd_delete_event($id) {
-    global $wpdb;
-    return $wpdb->delete(
-        $wpdb->prefix . 'bdthemes_refunds',
-        ['id' => $id],
-        ['%d']
-    );
-}
-
-
 $get_option = get_option('bdts_settings');
 if (isset($get_option['api_key'])) {
     define("API_KEY", $get_option['api_key']);
@@ -113,7 +95,7 @@ class BDT_REFUND_SYSTEM_APP {
      */
     public function insert_refund($form_data) {
         global $wpdb;
-        
+
         if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bdt-rs-form-submit')) {
             echo wp_json_encode('nonce_expired');
             wp_die();
@@ -123,19 +105,61 @@ class BDT_REFUND_SYSTEM_APP {
             return new \WP_Error('no-license', __('You must provide a License.', 'bdthemes-refunds-system'));
         }
 
+        $license_verify = $this->license_verify($form_data['product_license']);
+
+        if ('error' == $license_verify) {
+            $response = [
+                'status' => 'error',
+                'msg' => 'License is Invalid!'
+            ];
+            echo wp_json_encode($response);
+            wp_die();
+        }
+
+        $product_name = $license_verify['product_name'] . ' (' . $license_verify['license_title'] . ')';
+        $expiry_time  = strtotime($license_verify['expiry_time']);
+        $today = strtotime(date("Y-m-d H:i:s"));
+
+        if ($today >=  $expiry_time && 'U' !== $license_verify['has_support']) {
+            $response = [
+                'status' => 'error',
+                'msg'    => 'Sorry, the Refund period time (30 days) expired! The purchase date of your product was - ' . date('d M, Y', $expiry_time)
+            ];
+            echo wp_json_encode($response);
+            wp_die();
+        }
+
+        // $form_data['product_name'] = $product_name;
 
         $defaults = [
-            'name'       => '',
-            'email'      => '',
-            'message'    => '',
-            'created_at' => current_time('mysql'),
+            'product_name'    => '',
+            'product_license' => '',
+            'name'            => '',
+            'email'           => '',
+            'message'         => NULL,
+            'comments'        => NULL,
+            'status'          => 'waiting',
+            'status_by'       => NULL,
+            'created_at'      => current_time('mysql'),
+        ];
+
+        $args = [
+            'product_name'    => $product_name,
+            'product_license' => !empty($form_data['product_license']) ? sanitize_text_field($form_data['product_license']) : NULL,
+            'name'            => !empty($form_data['name']) ? sanitize_text_field($form_data['name']) : NULL,
+            'email'           => !empty($form_data['email']) ? sanitize_text_field($form_data['email']) : NULL,
+            'message'         => !empty($form_data['message']) ? sanitize_text_field($form_data['message']) : NULL,
+            'comments'        => !empty($form_data['comments']) ? sanitize_text_field($form_data['comments']) : NULL,
+            'status'          => 'waiting',
+            'status_by'       => NULL,
+            'created_at'      => current_time('mysql'),
         ];
 
         unset($form_data['action']);
         unset($form_data['_wpnonce']);
         unset($form_data['_wp_http_referer']);
 
-        $data = wp_parse_args($form_data, $defaults);
+        $data = wp_parse_args($args, $defaults);
 
         $inserted = $wpdb->insert(
             $wpdb->prefix . 'bdthemes_refunds',
@@ -143,17 +167,91 @@ class BDT_REFUND_SYSTEM_APP {
             [
                 '%s',
                 '%s',
-                '%d',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
                 '%s',
             ]
         );
 
         if (!$inserted) {
-            return new \WP_Error('failed-to-insert', __('Failed to insert data', 'bdthemes-refunds-system'));
+            echo wp_json_encode([
+                'status' => 'error',
+                'msg'    => 'Something wrong, please contact us - support@bdthemes.com'
+            ]);
+            wp_die();
         }
 
-        return $wpdb->insert_id;
+        echo wp_json_encode([
+            'status' => 'success',
+            'msg'    => 'The refund request was submitted successfully.'
+        ]);
+        wp_die();
+
     }
+
+    /**
+     * License Verify
+     *
+     * @param array $license
+     *
+     * @return int|WP_Error
+     */
+    public function license_verify($license) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL            => $this->CURLOPT_URL . 'license/view',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false,
+
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "POST",
+            CURLOPT_POSTFIELDS     => array(
+                'api_key'          => $this->API_KEY,
+                'license_code'     => $license,
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $response = json_decode($response, true);
+
+        curl_close($curl);
+
+        if (($response['status'] !== true) || (!isset($response['data']) || (isset($response['data']) && empty($response['data'])))) {
+            return 'error';
+        }
+
+        $response = $response['data'];
+        return $response;
+    }
+
+    /**
+     * Delete Refund Request
+     *
+     * @param int $id
+     *
+     * @return int|boolean
+     */
+
+    function __wd_delete_event($id) {
+        global $wpdb;
+        return $wpdb->delete(
+            $wpdb->prefix . 'bdthemes_refunds',
+            ['id' => $id],
+            ['%d']
+        );
+    }
+
 
     /**
      * Save Settings
