@@ -60,33 +60,34 @@ class Refund_Form extends Widget_Base {
 
 ?>
 		<div <?php $this->print_render_attribute_string('form'); ?>>
-			<form class="bdt-grid-small" bdt-grid>
+			<form class="bdt-grid-small" id="bdt-rs-form" method="post" bdt-grid>
 				<div class="bdt-margin bdt-width-1-1">
 					<label class="bdt-form-label" for="bdt-rs-license-key">Your License Key</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-license-key" type="text" placeholder="Your License Key">
+						<input class="bdt-input" id="bdt-rs-license-key" name="product_license" type="text" placeholder="Your License Key" required value="72A32394-65146F0C-5B665ADA-602E1308">
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
 					<label class="bdt-form-label" for="bdt-rs-name">Your Name</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-name" type="text" placeholder="Your Name">
+						<input class="bdt-input" id="bdt-rs-name" name="name" type="text" placeholder="Your Name" required value="XXX">
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
 					<label class="bdt-form-label" for="bdt-rs-email">Your Email</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-email" type="text" placeholder="Your Email">
+						<input class="bdt-input" id="bdt-rs-email" name="email" type="text" placeholder="Your Email" required value="XXX">
 					</div>
 				</div>
-				<div class="bdt-margin bdt-width-1-2@s">
-					<input class="bdt-input" type="text" placeholder="50" aria-label="50">
-				</div>
-				<div class="bdt-margin bdt-width-1-2@s">
-					<input class="bdt-input" type="text" placeholder="50" aria-label="50">
-				</div>
 				<div class="bdt-margin bdt-width-1-1">
-					<button class="bdt-button bdt-button-primary bdt-width-1-1">Submit</button>
+					<label class="bdt-form-label" for="bdt-rs-message">Refund Reason</label>
+					<textarea class="uk-textarea" rows="6" id="bdt-rs-message" name="message"></textarea>
+				</div>
+				<input type="hidden" name="action" value="bdt_rs_form">
+				<?php wp_nonce_field('bdt-rs-form-submit'); ?>
+
+				<div class="bdt-margin bdt-width-1-1">
+					<button class="bdt-button bdt-button-primary bdt-width-1-1" type="submit">Submit</button>
 				</div>
 			</form>
 		</div>

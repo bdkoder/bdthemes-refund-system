@@ -4,7 +4,45 @@
 		var $form = $scope.find('.bdt-rs-form'),
 			$settings = $form.data('settings');
 
-		console.log($settings);
+		var App = {
+			alertMsg: function ($title, $text, $icon) {
+				Swal.fire({
+					title: $title,
+					text: $text,
+					icon: $icon,
+				})
+			},
+			loader: function () {
+				Swal.showLoading();
+			},
+			submitForm: function (data) {
+				var Obj = this;
+				$.ajax({
+					type: 'POST',
+					url: ElementPackConfig.ajaxurl,
+					data: data,
+					// dataType: 'json'
+				}).done(function (data) {
+					let response = JSON.parse(data);
+
+					if (response == 'success') {
+						Obj.alertMsg('Request Done!', 'Submitted Successfully.', 'success');
+					} else {
+						Obj.alertMsg('Sorry!', data, 'error');
+					}
+				}).fail(function () {
+					alert("The Ajax call itself failed.");
+				});
+			}
+		}
+
+		$('#bdt-rs-form').on('submit', function (e) {
+			e.preventDefault();
+			let data = $(this).serializeArray();
+			console.log(data);
+			App.loader();
+			App.submitForm(data);
+		});
 
 	};
 

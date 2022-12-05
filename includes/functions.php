@@ -1,70 +1,6 @@
 <?php
 
 /**
- * Insert a new Event
- *
- * @param array $args
- *
- * @return int|WP_Error
- */
-function wd_event_insert_event($args = []) {
-    global $wpdb;
-
-    if (empty($args['name'])) {
-        return new \WP_Error('no-name', __('You must provide a name.', 'bdthemes-refunds-system'));
-    }
-
-    $defaults = [
-        'name' => '',
-        'date' => '',
-        'created_by' => get_current_user_id(),
-        'created_at' => current_time('mysql'),
-    ];
-
-    $data = wp_parse_args($args, $defaults);
-
-    if (isset($data['id'])) {
-
-        $id = $data['id'];
-        unset($data['id']);
-
-        $updated = $wpdb->update(
-            $wpdb->prefix . 'bdthemes_refunds',
-            $data,
-            ['id' => $id],
-            [
-                '%s',
-                '%s',
-                '%d',
-                '%s',
-            ],
-            ['%d']
-        );
-
-        return $updated;
-    } else {
-
-        $inserted = $wpdb->insert(
-            $wpdb->prefix . 'bdthemes_refunds',
-            $data,
-            [
-                '%s',
-                '%s',
-                '%d',
-                '%s',
-            ]
-        );
-
-        if (!$inserted) {
-            return new \WP_Error('failed-to-insert', __('Failed to insert data', 'bdthemes-refunds-system'));
-        }
-    }
-
-    return $wpdb->insert_id;
-}
-
-
-/**
  * Delete and Event
  *
  * @param int $id
@@ -72,7 +8,7 @@ function wd_event_insert_event($args = []) {
  * @return int|boolean
  */
 
-function wd_delete_event($id) {
+function __wd_delete_event($id) {
     global $wpdb;
     return $wpdb->delete(
         $wpdb->prefix . 'bdthemes_refunds',
@@ -117,7 +53,7 @@ class BDT_REFUND_SYSTEM_APP {
      * @return array
      */
 
-    function get_refunds($args = []) {
+    public function get_refunds($args = []) {
         global $wpdb;
 
         $defaults = [
@@ -147,7 +83,7 @@ class BDT_REFUND_SYSTEM_APP {
      *
      * @return int
      */
-    function get_refunds_count() {
+    public function get_refunds_count() {
         global $wpdb;
         return (int) $wpdb->get_var("SELECT count(id) FROM {$wpdb->prefix}bdthemes_refunds");
     }
@@ -160,11 +96,63 @@ class BDT_REFUND_SYSTEM_APP {
      *
      * @return object
      */
-    function get_refund($id) {
+    public function get_refund($id) {
         global $wpdb;
         return $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE id = %d", $id)
         );
+    }
+
+
+    /**
+     * Insert Refund
+     *
+     * @param array $form_data
+     *
+     * @return int|WP_Error
+     */
+    public function insert_refund($form_data) {
+        global $wpdb;
+        
+        if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bdt-rs-form-submit')) {
+            echo wp_json_encode('nonce_expired');
+            wp_die();
+        }
+
+        if (empty($form_data['product_license'])) {
+            return new \WP_Error('no-license', __('You must provide a License.', 'bdthemes-refunds-system'));
+        }
+
+
+        $defaults = [
+            'name'       => '',
+            'email'      => '',
+            'message'    => '',
+            'created_at' => current_time('mysql'),
+        ];
+
+        unset($form_data['action']);
+        unset($form_data['_wpnonce']);
+        unset($form_data['_wp_http_referer']);
+
+        $data = wp_parse_args($form_data, $defaults);
+
+        $inserted = $wpdb->insert(
+            $wpdb->prefix . 'bdthemes_refunds',
+            $data,
+            [
+                '%s',
+                '%s',
+                '%d',
+                '%s',
+            ]
+        );
+
+        if (!$inserted) {
+            return new \WP_Error('failed-to-insert', __('Failed to insert data', 'bdthemes-refunds-system'));
+        }
+
+        return $wpdb->insert_id;
     }
 
     /**
@@ -662,4 +650,13 @@ function bdt_rs_get_info() {
 function bdt_rs_action_trigger() {
     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
     $bdt_rs_app->action_trigger($_POST);
+}
+
+/**
+ * Submit Form
+ *
+ */
+function bdt_rs_form() {
+    $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
+    return $bdt_rs_app->insert_refund($_POST);
 }

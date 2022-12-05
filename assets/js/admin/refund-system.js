@@ -106,8 +106,6 @@
             });
         },
         init: function () {
-            var Obj = this;
-
             /**
              * Save Settings
              */
@@ -116,7 +114,7 @@
                 e.preventDefault();
                 let data = $(this).serializeArray();
                 App.loader();
-                Obj.saveSettings(data);
+                App.saveSettings(data);
             });
 
             /**
@@ -131,7 +129,7 @@
                     'id': $(this).data('id'),
                 };
                 App.loader();
-                Obj.getInfo(data);
+                App.getInfo(data);
             });
 
             /**
@@ -151,7 +149,7 @@
                 };
 
                 App.loader();
-                Obj.actionTrigger(data);
+                App.actionTrigger(data);
             });
         }
     }

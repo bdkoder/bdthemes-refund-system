@@ -109,6 +109,8 @@ final class Bdthemes_Refund_System {
         if (did_action('elementor/loaded')) {
             require_once BDT_REFUND_SYSTEM__PATH . 'plugin.php';
         }
+        add_action('wp_ajax_bdt_rs_form', 'bdt_rs_form');
+        add_action('wp_ajax_nopriv_bdt_rs_form', 'bdt_rs_form');
     }
 
     /**
