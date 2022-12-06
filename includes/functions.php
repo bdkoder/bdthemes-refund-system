@@ -42,7 +42,7 @@ class BDT_REFUND_SYSTEM_APP {
             'number' => 20,
             'offset' => 0,
             'orderby' => 'id',
-            'order' => 'ASC',
+            'order' => 'DESC',
         ];
 
         $args = wp_parse_args($args, $defaults);
@@ -111,6 +111,19 @@ class BDT_REFUND_SYSTEM_APP {
             $response = [
                 'status' => 'error',
                 'msg' => 'License is Invalid!'
+            ];
+            echo wp_json_encode($response);
+            wp_die();
+        }
+
+        $check_exists = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE product_license = %d", $form_data['product_license'])
+        );
+
+        if ($check_exists) {
+            $response = [
+                'status' => 'error',
+                'msg'    => 'You already applied for a Refund request. We are looking into it. Sometimes processing takes up to 7 working days. Thank you.'
             ];
             echo wp_json_encode($response);
             wp_die();
@@ -190,7 +203,6 @@ class BDT_REFUND_SYSTEM_APP {
             'msg'    => 'The refund request was submitted successfully.'
         ]);
         wp_die();
-
     }
 
     /**

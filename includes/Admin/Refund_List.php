@@ -75,11 +75,12 @@ class Refund_List extends \WP_List_Table {
 
     public function column_product_license($item) {
         return sprintf(
-            '<strong>Product - </strong><i>%1$s</i> <br> <strong>License - </strong><i>%2$s</i> <br> <strong>Email - </strong><i>%3$s</i> <br> <strong>Message - %4$s</strong>',
+            '<strong>Product - </strong><i>%1$s</i> <br> <strong>License - </strong><i>%2$s</i> <br> <strong>Email - </strong><i>%3$s</i> <br> <strong>Message - %4$s</strong><br> <strong>Comments - %5$s</strong>',
             $item->product_name,
             $item->product_license,
             $item->email,
-            $item->message
+            $item->message,
+            $item->comments
         );
     }
 
