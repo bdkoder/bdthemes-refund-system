@@ -27,6 +27,7 @@
 
 					if (response.status == 'success') {
 						Obj.alertMsg('Request Accepted!', 'Our refund team will respond to you very soon. Thank you.', 'success');
+						$($form).find('form')[0].reset();
 					} else if (response.status == 'error') {
 						Obj.alertMsg('Sorry!', response.msg, 'error');
 					} else {

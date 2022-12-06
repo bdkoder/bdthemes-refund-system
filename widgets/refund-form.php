@@ -74,6 +74,23 @@ class Refund_Form extends Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'field_spacing',
+			[
+				'label' => __('Space Between', 'bdt-refund-system'),
+				'type'  => Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 20,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .bdt-rs-form .bdt-margin' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -114,13 +131,13 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->add_control(
-            'button_full_width',
-            [
-                'label'   => __('Button Full Width', 'bdthemes-element-pack'),
-                'type'    => Controls_Manager::SWITCHER,
-                'default' => 'yes',
-            ]
-        );
+			'button_full_width',
+			[
+				'label'   => __('Button Full Width', 'bdthemes-element-pack'),
+				'type'    => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+			]
+		);
 
 		$this->add_control(
 			'button_color',
@@ -134,12 +151,12 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name'      => 'button_background',
-                'selector'  => '{{WRAPPER}} .bdt-button',
-            ]
-        );
+			Group_Control_Background::get_type(),
+			[
+				'name'      => 'button_background',
+				'selector'  => '{{WRAPPER}} .bdt-button',
+			]
+		);
 
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
@@ -150,44 +167,44 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->add_responsive_control(
-            'button_padding',
-            [
-                'label'      => __('Padding', 'bdthemes-element-pack'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .bdt-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
+			'button_padding',
+			[
+				'label'      => __('Padding', 'bdthemes-element-pack'),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', 'em', '%'],
+				'selectors'  => [
+					'{{WRAPPER}} .bdt-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
 
 		$this->add_group_control(
-            Group_Control_Border::get_type(),
-            [
-                'name'        => 'button_border',
-                'placeholder' => '1px',
-                'default'     => '1px',
-                'selector'    => '{{WRAPPER}} .bdt-button',
-            ]
-        );
+			Group_Control_Border::get_type(),
+			[
+				'name'        => 'button_border',
+				'placeholder' => '1px',
+				'default'     => '1px',
+				'selector'    => '{{WRAPPER}} .bdt-button',
+			]
+		);
 
-        $this->add_responsive_control(
-            'button_radius',
-            [
-                'label'      => __('Border Radius', 'bdthemes-element-pack'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .bdt-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
-                ],
-            ]
-        );
+		$this->add_responsive_control(
+			'button_radius',
+			[
+				'label'      => __('Border Radius', 'bdthemes-element-pack'),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => ['px', '%'],
+				'selectors'  => [
+					'{{WRAPPER}} .bdt-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
+				],
+			]
+		);
 
 
 		$this->add_control(
 			'button_heading',
 			[
-				'label'     => esc_html__( 'Hover Style', 'textdomain' ),
+				'label'     => esc_html__('Hover Style', 'textdomain'),
 				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -205,12 +222,12 @@ class Refund_Form extends Widget_Base {
 		);
 
 		$this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name'      => 'button_background_hover',
-                'selector'  => '{{WRAPPER}} .bdt-button:hover',
-            ]
-        );
+			Group_Control_Background::get_type(),
+			[
+				'name'      => 'button_background_hover',
+				'selector'  => '{{WRAPPER}} .bdt-button:hover',
+			]
+		);
 
 		$this->end_controls_section();
 	}
