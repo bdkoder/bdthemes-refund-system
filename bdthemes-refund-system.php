@@ -75,6 +75,8 @@ final class Bdthemes_Refund_System {
         if (!$instance) {
             $instance = new self();
         }
+        
+        new Bdthemes\RefundSystem\Api\Request_List_Public('Bdthemes Refund System', BDT_REFUND_SYSTEM_VERSION);
 
         return $instance;
     }

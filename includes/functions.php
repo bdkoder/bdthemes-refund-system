@@ -105,7 +105,7 @@ class BDT_REFUND_SYSTEM_APP {
             return new \WP_Error('no-license', __('You must provide a License.', 'bdthemes-refunds-system'));
         }
 
-        $license_verify = $this->license_verify($form_data['product_license']);
+        $license_verify = $this->license_verify(sanitize_text_field(trim($form_data['product_license'])));
 
         if ('error' == $license_verify) {
             $response = [
@@ -117,7 +117,7 @@ class BDT_REFUND_SYSTEM_APP {
         }
 
         $check_exists = $wpdb->get_row(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE product_license = %d", $form_data['product_license'])
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}bdthemes_refunds WHERE product_license = %s", sanitize_text_field(trim($form_data['product_license'])))
         );
 
         if ($check_exists) {
@@ -129,14 +129,27 @@ class BDT_REFUND_SYSTEM_APP {
             wp_die();
         }
 
+
         $product_name = $license_verify['product_name'] . ' (' . $license_verify['license_title'] . ')';
-        $expiry_time  = strtotime($license_verify['expiry_time']);
+        $entry_time  = strtotime($license_verify['entry_time']);
+        $entry_time_with_30  = strtotime($license_verify['entry_time'] . '+30 days');
         $today = strtotime(date("Y-m-d H:i:s"));
 
-        if ($today >=  $expiry_time && 'U' !== $license_verify['has_support']) {
+
+        // echo date('d M, Y', $entry_time_with_30);
+        // print_r($license_verify); exit();
+
+        /**
+         * If 30 days expired
+         * Will be reject for refund
+         */
+
+        //  var_dump($today ,  $entry_time_with_30); exit();
+
+        if ($today > $entry_time_with_30) {
             $response = [
                 'status' => 'error',
-                'msg'    => 'Sorry, the Refund period time (30 days) expired! The purchase date of your product was - ' . date('d M, Y', $expiry_time)
+                'msg'    => 'Sorry, the Refund period time (30 days) expired! The purchase date of your product was - ' . date('d M, Y', $entry_time)
             ];
             echo wp_json_encode($response);
             wp_die();

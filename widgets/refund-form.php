@@ -47,6 +47,95 @@ class Refund_Form extends Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'text_license',
+			[
+				'label'   => esc_html__('License', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your License Key',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_license_placeholder',
+			[
+				'label'   => esc_html__('License Placeholder', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your License Key',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_name',
+			[
+				'label'   => esc_html__('Name', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your Name',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_name_placeholder',
+			[
+				'label'   => esc_html__('Name Placeholder', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your Name',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_email',
+			[
+				'label'   => esc_html__('Email', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your Email',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_email_placeholder',
+			[
+				'label'   => esc_html__('Email Placeholder', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Your Email',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_refund_reason',
+			[
+				'label'   => esc_html__('Refund Reason', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Refund Reason',
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_refund_reason_placeholder',
+			[
+				'label'   => esc_html__('Refund Reason Placeholder', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'rows'    => 2,
+			]
+		);
+
+		$this->add_control(
+			'text_btn',
+			[
+				'label'   => esc_html__('Submit Button', 'bdt-refund-system'),
+				'type'    => Controls_Manager::TEXTAREA,
+				'default' => 'Submit',
+				'rows'    => 2,
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -57,7 +146,7 @@ class Refund_Form extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'container_width',
 			[
 				'label' => __('Max Width', 'bdt-refund-system'),
@@ -74,7 +163,7 @@ class Refund_Form extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'field_spacing',
 			[
 				'label' => __('Space Between', 'bdt-refund-system'),
@@ -98,6 +187,23 @@ class Refund_Form extends Widget_Base {
 			[
 				'label' => __('Label', 'bdt-refund-system'),
 				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_responsive_control(
+			'label_spacing',
+			[
+				'label' => __('Label Spacing', 'bdt-refund-system'),
+				'type'  => Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 20,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .bdt-rs-form .bdt-form-controls, {{WRAPPER}} .bdt-rs-form .bdt-textarea' => 'margin-top: {{SIZE}}{{UNIT}};',
+				],
 			]
 		);
 
@@ -250,32 +356,40 @@ class Refund_Form extends Widget_Base {
 		<div <?php $this->print_render_attribute_string('form'); ?>>
 			<form class="bdt-grid-small" id="bdt-rs-form" method="post" bdt-grid>
 				<div class="bdt-margin bdt-width-1-1">
-					<label class="bdt-form-label" for="bdt-rs-license-key">Your License Key</label>
+					<label class="bdt-form-label" for="bdt-rs-license-key">
+						<?php echo wp_kses_post( $settings['text_license'] ); ?>
+					</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-license-key" name="product_license" type="text" placeholder="Your License Key" required>
+						<input class="bdt-input" id="bdt-rs-license-key" name="product_license" type="text" placeholder="<?php echo esc_html( $settings['text_license_placeholder'] ); ?>" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
-					<label class="bdt-form-label" for="bdt-rs-name">Your Name</label>
+					<label class="bdt-form-label" for="bdt-rs-name">
+						<?php echo wp_kses_post( $settings['text_name'] ); ?>
+					</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-name" name="name" type="text" placeholder="Your Name" required>
+						<input class="bdt-input" id="bdt-rs-name" name="name" type="text" placeholder="<?php echo esc_html( $settings['text_name_placeholder'] ); ?>" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-2@s">
-					<label class="bdt-form-label" for="bdt-rs-email">Your Email</label>
+					<label class="bdt-form-label" for="bdt-rs-email">
+						<?php echo wp_kses_post( $settings['text_email'] ); ?>
+					</label>
 					<div class="bdt-form-controls">
-						<input class="bdt-input" id="bdt-rs-email" name="email" type="email" placeholder="Your Email" required>
+						<input class="bdt-input" id="bdt-rs-email" name="email" type="email" placeholder="<?php echo esc_html( $settings['text_email_placeholder'] ); ?>" required>
 					</div>
 				</div>
 				<div class="bdt-margin bdt-width-1-1">
-					<label class="bdt-form-label" for="bdt-rs-message">Refund Reason</label>
-					<textarea class="uk-textarea" rows="6" id="bdt-rs-message" name="message"></textarea>
+					<label class="bdt-form-label" for="bdt-rs-message">
+						<?php echo wp_kses_post( $settings['text_refund_reason'] ); ?>
+					</label>
+					<textarea class="bdt-textarea" rows="6" id="bdt-rs-message" name="message" placeholder="<?php echo esc_html( $settings['text_refund_reason_placeholder'] ); ?>"></textarea>
 				</div>
 				<input type="hidden" name="action" value="bdt_rs_form">
 				<?php wp_nonce_field('bdt-rs-form-submit'); ?>
 
 				<div class="bdt-margin <?php echo ('yes' == $settings['button_full_width']) ? ' bdt-width-1-1' : ''; ?>">
-					<button class="bdt-button bdt-button-primary <?php echo ('yes' == $settings['button_full_width']) ? ' bdt-width-1-1' : ''; ?>" type="submit">Submit</button>
+					<button class="bdt-button bdt-button-primary <?php echo ('yes' == $settings['button_full_width']) ? ' bdt-width-1-1' : ''; ?>" type="submit"><?php echo esc_html( $settings['text_btn'] ); ?></button>
 				</div>
 			</form>
 		</div>
