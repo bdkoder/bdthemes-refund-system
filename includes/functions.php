@@ -215,6 +215,14 @@ class BDT_REFUND_SYSTEM_APP {
             'status' => 'success',
             'msg'    => 'The refund request was submitted successfully.'
         ]);
+
+        $email_data = [
+            'email' => $form_data['email'],
+            'subject' => 'Refund Accepted'
+        ];
+
+        $this->send_email($email_data);
+
         wp_die();
     }
 
@@ -728,6 +736,30 @@ class BDT_REFUND_SYSTEM_APP {
         echo wp_json_encode($response);
         wp_die();
     }
+
+    public function send_email($data) {
+        $to      = $data['email'];
+        $subject = $data['subject'];
+        // GET EMAIL BODY FROM TEMPLATE
+        // $body = include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html';
+        // $body = '/includes/email-templates/test-email.html';
+
+
+        ob_start(); 
+        // include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html';
+        $template = file_get_contents(include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html');
+
+        $template = str_replace('[userName]', 'XXXX', $template);
+
+        $email_content = ob_get_contents();
+        ob_end_clean();
+
+        // SET HTML CONTENT TYPE
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+        // SEND WITH WP_MAIL() FUNCTION
+        // wp_mail($to, $subject, $body, $headers);
+        wp_mail($to, "Booking details", $email_content, $headers);
+    }
 }
 
 /**
@@ -783,3 +815,12 @@ function bdt_rs_form() {
     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
     return $bdt_rs_app->insert_refund($_POST);
 }
+
+/**
+ * Send Emails
+ */
+
+//  function bdt_rs_send_emails() {
+//     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
+//     return $bdt_rs_app->send_email($_POST);
+// }
