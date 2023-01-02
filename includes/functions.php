@@ -239,7 +239,7 @@ class BDT_REFUND_SYSTEM_APP {
             'icon'            => 'refund.png',
         ];
 
-        $this->send_email($email_data);
+        $this->send_email_automation($email_data);
 
         wp_die();
     }
@@ -520,7 +520,7 @@ class BDT_REFUND_SYSTEM_APP {
         $result .= '<div class="bdt-margin">
                 <label class="bdt-form-label" for="bdt-rs-action-select">License Action</label>
                 <div class="bdt-form-controls bdt-margin-top-small">
-                    <select class="bdt-select bdt-padding-remove" id="bdt-rs-action-select" data-id="' . $row_data->id . '">
+                    <select class="bdt-padding-remove" id="bdt-rs-action-select" data-id="' . $row_data->id . '">
                         <option>Select Action</option>
                         <option value="waiting">Waiting</option>
                         <option value="declined">Declined</option>
@@ -531,6 +531,7 @@ class BDT_REFUND_SYSTEM_APP {
             </div>';
         $result .= '<div class="bdt-margin">
             <textarea class="bdt-textarea" rows="5" placeholder="Comments/Note" id="bdt-rs-comments">' . $row_data->comments . '</textarea>
+            <textarea class="bdt-textarea bdt-margin-top" rows="5" placeholder="Additional Message with Email" id="bdt-rs-additional-msg"></textarea>
         </div>
         <button class="bdt-button bdt-button-primary" type="button" id="bdt-rs-action-submit">Update</button>';
 
@@ -646,11 +647,11 @@ class BDT_REFUND_SYSTEM_APP {
                                 <td>
                                     <strong>Name</strong>
                                 </td>
-                                <td>' . $response['data']['name'] . '</td>
+                                <td id="rf-modal-client-name">' . $response['data']['name'] . '</td>
                                 <td>
                                     <strong>Email</strong>
                                 </td>
-                                <td>' . $response['data']['email'] . '</td>
+                                <td id="rf-modal-client-email">' . $response['data']['email'] . '</td>
                             </tr>
                             <tr>
                                 <td>
@@ -709,7 +710,7 @@ class BDT_REFUND_SYSTEM_APP {
      * @return void
      */
 
-    public function action_trigger($data) {
+    public function action_trigger($form_data) {
 
         //todo
 
@@ -718,7 +719,7 @@ class BDT_REFUND_SYSTEM_APP {
         //         wp_die();
         //     }
 
-        $id = intval($data['id']);
+        $id = intval($form_data['id']);
         global $wpdb;
 
         $defaults = [
@@ -727,8 +728,8 @@ class BDT_REFUND_SYSTEM_APP {
             'status_by' => get_current_user_id()
         ];
         $args = [
-            'status'    => $data['actionValue'],
-            'comments'  => !empty($data['comments']) ? $data['comments'] : NULL,
+            'status'    => $form_data['actionValue'],
+            'comments'  => !empty($form_data['comments']) ? $form_data['comments'] : NULL,
             'status_by' => get_current_user_id()
         ];
         $data = wp_parse_args($args, $defaults);
@@ -752,21 +753,67 @@ class BDT_REFUND_SYSTEM_APP {
         }
 
         echo wp_json_encode($response);
+
+
+        /**
+         * Send Email
+         */
+
+        $send_mail = true;
+
+        $to_emails = [$form_data['email'], $form_data['submit_email']];
+
+        $email_data = [
+            'name'  => $form_data['name'],
+            'email' => $to_emails,
+        ];
+
+        if (isset($form_data['additional_msg']) && !empty($form_data['additional_msg'])) {
+            $email_data['additional_msg'] = $form_data['additional_msg'];
+        }
+
+        switch ($form_data['actionValue']) {
+            case 'waiting':
+                $email_data['subject']         = 'Your refund request is in the Queue';
+                $email_data['email_templates'] = 'refund-waiting.html';
+                $email_data['icon']            = 'refund-waiting.png';
+                break;
+            case 'declined':
+                $email_data['subject']         = 'Opps!! Unfortunately it can\'t be refunded this time 😪';
+                $email_data['email_templates'] = 'refund-declined.html';
+                $email_data['icon']            = 'refund-declined.png';
+                break;
+            case 'approved':
+                $email_data['subject']         = 'It feels much bad to see you Leave!!';
+                $email_data['email_templates'] = 'refund-approved.html';
+                $email_data['icon']            = 'refund-approved.png';
+                break;
+
+            default:
+                $send_mail = false;
+                break;
+        }
+
+        if ($send_mail) {
+            $this->send_email_automation($email_data);
+        }
         wp_die();
     }
 
-    public function send_email($data) {
-        $to      = $data['email'];
-        $subject = $data['subject'];
-        $icon    = $data['icon'];
+    /**
+     * Automation Email Send for Global Apps
+     */
 
-        if (!isset($data['icon'])) {
-            $icon = 'information.png';
-        }
+    public function send_email_automation($data) {
+        $to             = $data['email'];
+        $subject        = $data['subject'];
+        $icon           = isset($data['icon']) ? $data['icon'] : 'information.png';
+        $additional_msg = isset($data['additional_msg']) & !empty($data['additional_msg']) ? $data['additional_msg'] : ' ';
 
         $swap_var = array(
             "{userName}"                => $data['name'],
-            "{subject}"                => $subject,
+            "{subject}"                 => $subject,
+            "{additionalMsg}"           => $additional_msg,
             "{year}"                    => date('Y'),
             "{logoURL}"                 => BDT_REFUND_SYSTEM_URL . '/wp-content/plugins/assets/imgs/bdthemes-logo.jpg',
             "{iconURL}"                 => BDT_REFUND_SYSTEM_URL . 'wp-content/includes/email-templates/icons/' . $icon,
@@ -857,5 +904,5 @@ function bdt_rs_form() {
 
 //  function bdt_rs_send_emails() {
 //     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
-//     return $bdt_rs_app->send_email($_POST);
+//     return $bdt_rs_app->send_email_automation($_POST);
 // }

@@ -141,11 +141,15 @@
                 $('#bdt_rs_action_nonce').val()
 
                 let data = {
-                    'action': 'bdt_rs_action_trigger',
-                    'actionValue': $('#bdt-rs-action-select').val(),
-                    'id': $('#bdt-rs-action-select').data('id'),
-                    '_wpnonce': $('#bdt_rs_action_nonce').val(),
-                    'comments': $('#bdt-rs-comments').val(),
+                    'action'        : 'bdt_rs_action_trigger',
+                    'actionValue'   : $('#bdt-rs-action-select').val(),
+                    'id'            : $('#bdt-rs-action-select').data('id'),
+                    'name'          : $('#rf-modal-client-name').text(),
+                    'email'         : $('#rf-modal-client-email').text(),
+                    'submit_email'  : $('#submit-email-' + $('#bdt-rs-action-select').data('id')).text(),
+                    '_wpnonce'      : $('#bdt_rs_action_nonce').val(),
+                    'comments'      : $('#bdt-rs-comments').val(),
+                    'additional_msg': $('#bdt-rs-additional-msg').val(),
                 };
 
                 App.loader();
