@@ -224,10 +224,16 @@ class BDT_REFUND_SYSTEM_APP {
             'msg'    => 'The refund request was submitted successfully.'
         ]);
 
+        /**
+         * Send Email
+         */
+
+        $to_emails = [$form_data['email'], $client_email];
+
         $email_data = [
             'name'            => $form_data['name'],
-            'email'           => [$form_data['email'], $client_email],
-            'subject'         => 'Refund Accepted',
+            'email'           => $to_emails,
+            'subject'         => esc_html('Refund Request Submitted Successfully', 'bdthemes-refund-system'),
             'email_templates' => 'request-confirmation.html',
             //
             'icon'            => 'refund.png',
@@ -758,15 +764,17 @@ class BDT_REFUND_SYSTEM_APP {
             $icon = 'information.png';
         }
 
-        print_r($to);
-
         $swap_var = array(
-            "{logoURL}"  => BDT_REFUND_SYSTEM_URL . '/wp-content/plugins/assets/imgs/bdthemes-logo.jpg',
-            "{iconURL}"  => BDT_REFUND_SYSTEM_URL . 'wp-content/includes/email-templates/icons/' . $icon,
-            "{userName}" => $data['name'],
-            "{year}"     => date('Y'),
+            "{userName}"                => $data['name'],
+            "{subject}"                => $subject,
+            "{year}"                    => date('Y'),
+            "{logoURL}"                 => BDT_REFUND_SYSTEM_URL . '/wp-content/plugins/assets/imgs/bdthemes-logo.jpg',
+            "{iconURL}"                 => BDT_REFUND_SYSTEM_URL . 'wp-content/includes/email-templates/icons/' . $icon,
+            "{emailAssetsURL}"          => BDT_REFUND_SYSTEM_URL . 'wp-content/includes/email-templates/icons',
+            "{appPrivacyPolicyURL}"     => 'https://bdthemes.com/privacy-policy/',
+            "{appTermsAndConditionURL}" => 'https://bdthemes.com/terms-of-use/',
+            "{appSupportURL}"           => 'https://bdthemes.com/support/',
         );
-
 
         ob_start();
 
