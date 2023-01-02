@@ -48,8 +48,8 @@ class Plugin {
 	 */
 	public function widget_scripts() {
 		$suffix                    = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-		wp_register_script('bdt-rs-form', plugins_url('/assets/js/refund-form.js', __FILE__), ['jquery'], false, true);
-		wp_register_script('sweetalert2', plugins_url('/assets/js/sweetalert2.all.min.js', __FILE__), ['jquery'], false, true);
+		wp_register_script('bdt-rs-form', plugins_url('/assets/js/refund-form.js', __FILE__), ['jquery'], BDT_REFUND_SYSTEM_VERSION, true);
+		wp_register_script('sweetalert2', plugins_url('/assets/js/sweetalert2.all.min.js', __FILE__), ['jquery'], BDT_REFUND_SYSTEM_VERSION, true);
 	}
 
 	/**
@@ -68,14 +68,14 @@ class Plugin {
 			[
 				'elementor-editor',
 			],
-			'1.2.1',
+			BDT_REFUND_SYSTEM_VERSION,
 			true
 		);
 	}
 
 	public function load_admin_scripts() {
 		$suffix                    = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script('sweetalert2', plugins_url('/assets/js/sweetalert2.all.min.js', __FILE__), ['jquery'], false, true);
+		wp_enqueue_script('sweetalert2', plugins_url('/assets/js/sweetalert2.all.min.js', __FILE__), ['jquery'], BDT_REFUND_SYSTEM_VERSION, true);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Plugin {
 
 	public function widget_styles() {
 
-		wp_register_style('bdt-rs-form', BDT_REFUND_SYSTEM_ASSETS . 'css/bdt-rs-form.css');
+		wp_register_style('bdt-rs-form', BDT_REFUND_SYSTEM_ASSETS . 'css/bdt-rs-form.css', [], BDT_REFUND_SYSTEM_VERSION, 'all');
 	}
 
 	/**

@@ -78,6 +78,7 @@
 
                 if (response == 'success') {
                     Obj.alertMsg('Great Job!', 'Operation Successfully.', 'success');
+                    location.reload();
                 } else {
                     Obj.alertMsg('Sorry!', 'Operation Failed! Or Data maybe not modified.', 'error');
                 }

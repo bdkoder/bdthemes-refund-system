@@ -68,4 +68,14 @@ h3.bdt-panel {
     color: #fff;
 }
 
- 
+.bdt-badge.bdt-rf-approved {
+    background: #65ab2e;
+}
+
+.bdt-badge.bdt-rf-waiting {
+    background: #e98723;
+}
+
+.bdt-badge.bdt-rf-declined {
+    background: #e91717;
+}

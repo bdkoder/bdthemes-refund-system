@@ -87,7 +87,7 @@ class Refund_List extends \WP_List_Table {
 
     public function column_status($item) {
         $status = !empty($item->status) ? $item->status : 'waiting';
-        return sprintf('<a class="bdt-badge badge-primary" href="javascript:void(0);">%1$s</a>', ucwords($status));
+        return sprintf('<a class="bdt-badge badge-primary bdt-rf-%1$s" href="javascript:void(0);">%2$s</a>', $status, ucwords($status));
     }
 
 
