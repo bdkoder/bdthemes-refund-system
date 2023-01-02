@@ -75,7 +75,7 @@ final class Bdthemes_Refund_System {
         if (!$instance) {
             $instance = new self();
         }
-        
+
         new Bdthemes\RefundSystem\Api\Request_List_Public('Bdthemes Refund System', BDT_REFUND_SYSTEM_VERSION);
 
         return $instance;
@@ -93,6 +93,8 @@ final class Bdthemes_Refund_System {
         define('BDT_REFUND_SYSTEM_PATH', __DIR__);
         define('BDT_REFUND_SYSTEM_URL', plugins_url('', BDT_REFUND_SYSTEM_FILE));
         define('BDT_REFUND_SYSTEM_ASSETS', BDT_REFUND_SYSTEM_URL . '/assets/');
+        // echo BDT_REFUND_SYSTEM_URL;
+        // echo BDT_REFUND_SYSTEM__PATH;
     }
 
     /**
@@ -136,4 +138,3 @@ function bdt_refund_system() {
 
 // kick-off the plugin
 bdt_refund_system();
-

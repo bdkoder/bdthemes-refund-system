@@ -135,9 +135,17 @@ class BDT_REFUND_SYSTEM_APP {
         $entry_time_with_30  = strtotime($license_verify['entry_time'] . '+30 days');
         $today = strtotime(date("Y-m-d H:i:s"));
 
+        /**
+         * Get Information of Clients
+         */
+        $client_email = false;
+        if (isset($license_verify['client_id'])) {
+            $client_email = $this->get_client_email($license_verify['client_id']);
+        }
+
 
         // echo date('d M, Y', $entry_time_with_30);
-        // print_r($license_verify); exit();
+        // print_r($client_email); exit();
 
         /**
          * If 30 days expired
@@ -217,8 +225,12 @@ class BDT_REFUND_SYSTEM_APP {
         ]);
 
         $email_data = [
-            'email' => $form_data['email'],
-            'subject' => 'Refund Accepted'
+            'name'            => $form_data['name'],
+            'email'           => [$form_data['email'], $client_email],
+            'subject'         => 'Refund Accepted',
+            'email_templates' => 'request-confirmation.html',
+            //
+            'icon'            => 'refund.png',
         ];
 
         $this->send_email($email_data);
@@ -740,25 +752,40 @@ class BDT_REFUND_SYSTEM_APP {
     public function send_email($data) {
         $to      = $data['email'];
         $subject = $data['subject'];
-        // GET EMAIL BODY FROM TEMPLATE
-        // $body = include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html';
-        // $body = '/includes/email-templates/test-email.html';
+        $icon    = $data['icon'];
+
+        if (!isset($data['icon'])) {
+            $icon = 'information.png';
+        }
+
+        print_r($to);
+
+        $swap_var = array(
+            "{logoURL}"  => BDT_REFUND_SYSTEM_URL . '/wp-content/plugins/assets/imgs/bdthemes-logo.jpg',
+            "{iconURL}"  => BDT_REFUND_SYSTEM_URL . 'wp-content/includes/email-templates/icons/' . $icon,
+            "{userName}" => $data['name'],
+            "{year}"     => date('Y'),
+        );
 
 
-        ob_start(); 
-        // include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html';
-        $template = file_get_contents(include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/test-email.html');
+        ob_start();
 
-        $template = str_replace('[userName]', 'XXXX', $template);
-
+        include BDT_REFUND_SYSTEM__PATH . '/includes/email-templates/' . $data['email_templates'];
         $email_content = ob_get_contents();
+
+        foreach (array_keys($swap_var) as $key) {
+            if (
+                strlen($key) > 2 && trim($swap_var[$key]) != ''
+            )
+                $email_content = str_replace('$' . $key, $swap_var[$key], $email_content);
+        }
+
         ob_end_clean();
 
         // SET HTML CONTENT TYPE
         $headers = array('Content-Type: text/html; charset=UTF-8');
         // SEND WITH WP_MAIL() FUNCTION
-        // wp_mail($to, $subject, $body, $headers);
-        wp_mail($to, "Booking details", $email_content, $headers);
+        wp_mail($to, $subject, $email_content, $headers);
     }
 }
 
