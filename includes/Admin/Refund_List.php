@@ -12,7 +12,6 @@ if (!class_exists('WP_List_Table')) {
  * @author Shahidul Islam
  */
 class Refund_List extends \WP_List_Table
-
 {
     public function __construct()
     {
@@ -69,7 +68,9 @@ class Refund_List extends \WP_List_Table
             __('Details & Action', 'bdthemes-refund-system')
         );
 
-        $actions['delete'] = sprintf('<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure?\');" title="%s">%s</a>', wp_nonce_url(admin_url('admin-post.php?action=bdt-refund-delete&id=' . $item->id), 'bdt-refund-delete'), $item->id, __('Delete', 'bdthemes-refund-system'), __('Delete', 'bdthemes-refund-system'));
+        if ('waiting' == $item->status) {
+            $actions['delete'] = sprintf('<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure?\');" title="%s">%s</a>', wp_nonce_url(admin_url('admin-post.php?action=bdt-refund-delete&id=' . $item->id), 'bdt-refund-delete'), $item->id, __('Delete', 'bdthemes-refund-system'), __('Delete', 'bdthemes-refund-system'));
+        }
 
         return sprintf(
             '<a href="%1$s"><strong>%2$s</strong></a> %3$s',
