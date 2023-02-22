@@ -1,0 +1,81 @@
+.bdts-wrapper {
+    background: #fff;
+    max-width: 1600px;
+}
+
+.bdt-main-tab li {
+    outline: none;
+    display: inline-block;
+}
+
+.bdt-main-tab a {
+    text-decoration: none;
+    outline: none;
+}
+
+
+.bdt-main-tab a .dashicons {
+    font-size: 46px;
+}
+
+.bdt-content-item {
+    display: none;
+}
+
+.bdt-content-item.bdt-active {
+    display: block;
+}
+
+.bdts-menu {
+    width: 150px;
+    border-right: 1px solid #ddd;
+    margin-right: 32px;
+}
+
+.bdts-form-wrapper {}
+
+.bdts-form-wrapper .bdt-form-large, .bdt-content-item .bdt-form-large {
+    width: 25em;
+    height: 46px
+}
+
+.bdts-form-wrapper .bdt-button {
+    background: #0f7ae5;
+    color: #fff;
+    padding: 12px 24px;
+    width: 100%;
+    border-color: #0f7ae5;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.bdts-form-wrapper .bdt-button:hover {
+    color: #fff;
+    background: #338be3;
+    border-color: #338be3;
+}
+
+.bdt-link-heading:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.bdt-not-access .dashicons-lock {
+    font-size: 50px;
+}
+
+h3.bdt-panel {
+    color: #fff;
+}
+
+.bdt-badge.bdt-rf-approved {
+    background: #65ab2e;
+}
+
+.bdt-badge.bdt-rf-waiting {
+    background: #e98723;
+}
+
+.bdt-badge.bdt-rf-declined {
+    background: #e91717;
+}

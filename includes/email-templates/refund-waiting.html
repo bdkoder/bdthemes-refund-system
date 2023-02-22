@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting"> <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <title>[${subject}]</title>
+    <!--[if mso]>
+               <style>
+               * {
+               font-family: sans-serif !important;
+               }
+               </style>
+               <![endif]-->
+    <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+    <!--[if !mso]><!-->
+    <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+    <!--<![endif]-->
+    <!-- Web Font / @font-face : END -->
+    <!-- CSS Reset : BEGIN -->
+    <style>
+        /* What it does: Remove spaces around the email design added by some email clients. */
+        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        div[style*="margin: 16px 0"] {
+            margin: 0 !important;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            /* margin: 0 auto !important; */
+            margin: 0 auto;
+        }
+
+        table table table {
+            table-layout: auto;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        *[x-apple-data-detectors],
+        /* iOS */
+        .unstyle-auto-detected-links *,
+        .aBn {
+            border-bottom: 0 !important;
+            cursor: default !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .a6S {
+            display: none !important;
+            opacity: 0.01 !important;
+        }
+
+        img.g-img+div {
+            display: none !important;
+        }
+
+        @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+            .email-container {
+                min-width: 320px !important;
+            }
+        }
+
+        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+            .email-container {
+                min-width: 375px !important;
+            }
+        }
+
+        @media only screen and (min-device-width: 414px) {
+            .email-container {
+                min-width: 414px !important;
+            }
+        }
+    </style>
+    <!--[if mso]>
+        <style type="text/css">
+                ul,
+                ol {
+                        margin: 0 !important;
+                }
+                li {
+                        margin-left: 30px !important;
+                }
+                li.list-item-first {
+                        margin-top: 0 !important;
+                }
+                li.list-item-last {
+                        margin-bottom: 10px !important;
+                }
+        </style>
+        <![endif]-->
+    <style>
+        .main-table {
+            max-width: 800px;
+        }
+
+        .button-td,
+        .button-a {
+            transition: all 100ms ease-in;
+        }
+
+        @media screen and (max-width: 790px) {
+            .email-container {
+                margin: 0 auto !important;
+            }
+
+            .main-table {
+                width: 100% !important;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+                margin: auto !important;
+            }
+
+            .fluid {
+                max-width: 100% !important;
+                height: auto !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            /* What it does: Forces table cells into full-width rows. */
+            .stack-column,
+            .stack-column-center {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                direction: ltr !important;
+            }
+
+            .stack-column-center {
+                text-align: center !important;
+            }
+
+            .center-on-narrow {
+                text-align: center !important;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                float: none !important;
+            }
+
+            table.center-on-narrow {
+                display: inline-block !important;
+            }
+
+            .email-container p {
+                font-size: 17px !important;
+            }
+        }
+    </style>
+    <!-- Progressive Enhancements : END -->
+    <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
+    <!--[if gte mso 9]>
+        <xml>
+        <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->
+</head>
+
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #fff;">
+    <center style="width: 100%; background-color: #fff;">
+        <!--[if mso | IE]>
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fff;">
+                <tr>
+                        <td>
+                                <![endif]-->
+        <!-- Create white space after the desired preview text so email clients don’t pull other distracting text into the inbox preview. Extend as necessary. -->
+        <!-- Preview Text Spacing Hack : BEGIN -->
+        <div
+            style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+            &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+        </div>
+        <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0"
+            style="margin: 2em auto ;    background: #fff;" class="email-container main-table">
+            <tr>
+                <td style="text-align: center;" align="center">
+                    <img height="60" src="${logoURL}" alt="Logo" border="0" style="height: 60px;
+                         font-family: sans-serif;
+                         font-size: 60px;
+                         line-height: 60px;
+                         color: #555555;
+                         margin-bottom: 16px;
+                         ">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="hedaer-area" role="presentation" cellspacing="0" cellpadding="0" border="0"
+                        width="100%" style="background-color: #115cfa; border:2px solid #fff;">
+                        <tr>
+                            <td style="    display: block;   padding: 1.1em 0em;" align="middle" width="100%">
+                                <img height="80" style="  height: 80px !important; max-height: 80px !important; "
+                                    src="${iconURL}">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #fff;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                        style="background-color: #fff;">
+                        <tr>
+
+                            <td
+                                style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                <h1
+                                    style="margin: 0 0 20px; font-size: 21px; line-height: 30px; color: #333333; font-weight: normal;    text-align: center;">
+                                    REFUND WAITING
+
+                                </h1>
+                                <p style="margin: 0 0 10px;   text-align: left !important;"> <b> Hi ${userName},</b></p>
+
+                                <p style="margin: 0 0 10px; text-align: left !important;">
+                                    Warm Greetings from BdThemes team!
+                                    <br>
+                                    <br>
+                                    The refund you requested is in our waiting list. Usually it takes 3-7 days
+                                    to review the issues. We will get back to you as soon as possible!
+                                    <br>
+                                    <br>
+                                    <strong>${additionalMsg}</strong>
+                                </p>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 20px 20px;">
+                                <table width="100%" align="left" cellspacing="0" cellpadding="0" border="0"
+                                    style="  word-break: break-all">
+                                    <tr>
+                                        <td style="color: #555555; word-break: break-all; text-align: left !important">
+
+
+                                            <div style=" line-height: 1.5em;">
+                                                <!-- <br> -->
+                                                With best regards,
+                                                <br>
+
+                                                <span style="font-weight: bold">BdThemes Team!</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr style="text-align: center">
+                            <td
+                                style="padding: 2em 1em; font-family: sans-serif; font-size: 12px; line-height: 20px; color: #555555;">
+                                This is an automatically generated email and do not reply to this email.
+                                <br />
+                                Please ignore this message, if you did not use any product of BdThemes.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td align="center"
+                                style="padding: 20px; font-family: sans-serif; font-size: 1.2rem; line-height: 15px; color: #888888;">
+                                Stay On Touch
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td align="center" style="padding: 20px;">
+                                <a href="https://facebook.com/bdthemes" style="text-decoration: none;">
+                                    <img height="30" src="${emailAssetsURL}/facebook.png">
+                                </a>
+
+                                <a href="https://twitter.com/bdthemescom" style="text-decoration: none;">
+                                    <img height="30" src="${emailAssetsURL}/twitter.png">
+                                </a>
+
+                                <a href="https://youtube.com/bdthemes" style="text-decoration: none;">
+                                    <img height="30" src="${emailAssetsURL}/youtube.png">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #fff;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td
+                                style="padding: 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #888888;">
+                                <webversion style="color: #000;">&copy;&nbsp;${year} BdThemes Pvt. Ltd. | All Rights
+                                    Reserved</webversion>
+                                <br><br>
+                                <span class="unstyle-auto-detected-links">
+                                    <a href="${appPrivacyPolicyURL}" style="text-decoration: none; cursor: pointer !important;">Privacy
+                                        Policy</a>
+                                    |
+                                    <a href="${appTermsAndConditionURL}" style="text-decoration: none; cursor: pointer !important;">Terms and
+                                        Conditions</a>
+                                    |
+                                    <a href="${appSupportURL}"
+                                        style="text-decoration: none; cursor: pointer !important;">Get Support</a>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+
+</html>
