@@ -1004,7 +1004,7 @@ function bdt_rs_discord_notify()
 /**
  * Delete Refund
  */
-function delete_refund_request($id)
+function bdt_rs_delete_refund_request($id)
 {
     $bdt_rs_app = new BDT_REFUND_SYSTEM_APP();
     return $bdt_rs_app->delete_refund($id);

@@ -25,9 +25,10 @@ class Admin
             add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts']);
         }
 
-        add_action('wp_ajax_bdt_rs_save_settings', 'save_settings');
+        add_action('wp_ajax_bdt_rs_save_settings', 'bdt_rs_save_settings');
 
-        add_action('admin_post_bdt-refund-delete', [$refunds, 'delete_refund']);
+
+        add_action('admin_post_bdt-refund-delete', [$refunds, 'bdt_rs_delete_refund_request']);
 
     }
 
