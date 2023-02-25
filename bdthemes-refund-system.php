@@ -6,7 +6,7 @@
  * Plugin URI: https://bdthemes.com/
  * Author: bdthemes.com
  * Author URI: https://bdthemes.com/
- * Version: 1.7.0
+ * Version: 1.7.1
  * License: GPL2
  * Text Domain: refund-system
  */
@@ -52,7 +52,7 @@ final class Bdthemes_Refund_System
      * Plugin version
      * @var string
      */
-    const version = '1.7.0';
+    const version = '1.7.1';
 
     /**
      * class constructor
